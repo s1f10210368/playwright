@@ -18,3 +18,5 @@ export async function fetchStock(stockCode: string): Promise<number> {
   await browser.close();
   return stockPrice;
 }
+
+アイウエオアイウエオ

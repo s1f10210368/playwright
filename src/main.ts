@@ -7,4 +7,4 @@ async function main() {
   console.log(`株価コード ${stockCode} の価格は、 ${stockPrice} です。`);
 }
 
-main();
+fetchStock();

@@ -1,38 +1,23 @@
-import { chromium, ChromiumBrowser, ChromiumBrowserContext, Page } from 'playwright';
+import { chromium } from 'playwright';
 
-async function fetchStockPrice(url: string): Promise<string> {
-  let browser: ChromiumBrowser;
-  let context: ChromiumBrowserContext;
-  let page: Page;
+async function fetchStock() {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  const stockSymbol = 'AAPL'; // Apple株の例です。他の銘柄に変更できます。
+  const url = `https://finance.yahoo.com/quote/${stockSymbol}`;
 
-  try {
-    browser = await chromium.launch();
-    context = await browser.newContext();
-    page = await context.newPage();
+  await page.goto(url);
 
-    await page.goto(url);
+  const stockPrice = await page.$eval(
+    '[data-test="quote-header-info"] .My\(6px\)',
+    (element) => {
+      return element.textContent;
+    },
+  );
 
-    // 任意の株価の値が入っている要素のセレクタを指定する
-    const stockPriceSelector = '<CSS_SELECTOR>';
+  console.log(`The price of ${stockSymbol} is: $${stockPrice}`);
 
-    const stockPrice = await page.$eval(stockPriceSelector, (price) => {
-      return price.textContent.trim();
-    });
-
-    return stockPrice;
-  } catch (error) {
-    console.error(error);
-    return 'Error occurred';
-  } finally {
-    await page?.close();
-    await context?.close();
-    await browser?.close();
-  }
+  await browser.close();
 }
 
-(async () => {
-  // 株価情報を取得したいウェブサイトのURLを指定する
-  const targetUrl = '<WEBSITE_URL_WITH_STOCK_PRICE>';
-  const stockPrice = await fetchStockPrice(targetUrl);
-  console.log(`Stock price: ${stockPrice}`);
-})();
+fetchStock();

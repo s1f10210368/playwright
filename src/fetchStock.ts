@@ -7,14 +7,7 @@ export async function fetchStock(stockSymbol: string): Promise<number> {
 
     await page.goto(url);
 
-    const stockParentElement = await page.waitForSelector('[data-etfw-key="quotePrice"]'); // changed selector
-    if (stockParentElement === null) {
-        throw new Error("Stock price parent element not found");
-    }
-
-    const stockPriceElement = await stockParentElement.$(
-        '._2ikyOH > span'
-    ); // changed selector
+    const stockPriceElement = await page.waitForSelector('._3rXWJKZF');
     if (stockPriceElement === null) {
         throw new Error("Stock price element not found");
     }

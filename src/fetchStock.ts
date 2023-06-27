@@ -10,7 +10,7 @@ export async function fetchStock(stockSymbol: string) { // `export`および`sto
     await page.goto(url);
 
     const stockPrice = await page.$eval(
-        '[data-test="quote-header-info"] .My\(6px\)',
+        '[data-test="quote-header-info"] .D\(ib\)',
         (element) => {
             return element.textContent;
         },

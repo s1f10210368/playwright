@@ -1,9 +1,10 @@
 import { chromium } from 'playwright';
 
-export async function fetchStock() { // `export` を追加しました
+// 引数 `stockSymbol` を追加しました
+export async function fetchStock(stockSymbol: string) { // `export`および`stockSymbol`引数を追加
     const browser = await chromium.launch();
     const page = await browser.newPage();
-    const stockSymbol = 'AAPL'; // Apple株の例です。他の銘柄に変更できます。
+    // 関数の引数で渡された `stockSymbol` を使用
     const url = `https://finance.yahoo.com/quote/${stockSymbol}`;
 
     await page.goto(url);

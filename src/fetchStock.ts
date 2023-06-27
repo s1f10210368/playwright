@@ -19,4 +19,6 @@ export async function fetchStock(stockSymbol: string) { // `export`および`sto
     console.log(`The price of ${stockSymbol} is: $${stockPrice}`);
 
     await browser.close();
+
+    return Number(stockPrice);
 }

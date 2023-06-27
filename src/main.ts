@@ -7,3 +7,5 @@ async function main() {
   console.log(`株価コード ${stockCode} の価格は、 ${stockPrice} です。`);
 }
 
+main(); // main関数を実行する
+

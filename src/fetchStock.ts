@@ -21,7 +21,13 @@ export async function fetchStock(stockSymbol: string): Promise<number> {
     return Number(stockPrice.trim().replace(/,/g, ""));
 }
 
-// スクリプトの最後にこの行を追加
-fetchStock("7203.T").then((stockPrice) => {
-    console.log("Toyota's stock price:", stockPrice);
-});
+async function fetchStockRepeatedly(stockSymbol: string, interval: number) {
+  const stockPrice = await fetchStock(stockSymbol);
+  console.log(`${stockSymbol}'s stock price:`, stockPrice);
+
+  setTimeout(() => {
+    fetchStockRepeatedly(stockSymbol, interval);
+  }, interval);
+}
+
+fetchStockRepeatedly("7203.T", 10000); // 10秒ごとにトヨタの株価を取得

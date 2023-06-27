@@ -1,24 +1,22 @@
 import { chromium } from 'playwright';
 
-// 引数 `stockSymbol` を追加しました
-export async function fetchStock(stockSymbol: string) { // `export`および`stockSymbol`引数を追加
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
-    // 関数の引数で渡された `stockSymbol` を使用
-    const url = `https://finance.yahoo.com/quote/${stockSymbol}`;
+export async function fetchStock(stockSymbol: string): Promise<number> { // Promise<number> を追加
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  const url = `https://finance.yahoo.com/quote/${stockSymbol}`;
 
-    await page.goto(url);
+  await page.goto(url);
 
-    const stockPrice = await page.$eval(
-        '[data-test="quote-header-info"] .D\(ib\)',
-        (element) => {
-            return element.textContent;
-        },
-    );
+  const stockHeaderInfo = await page.waitForSelector('[data-test="quote-header-info"]', {timeout: 30000}); // タイムアウトを追加
+  const stockPriceElement = await stockHeaderInfo.$('span[data-reactid]');
+  if (stockPriceElement === null) { // 追加
+  throw new Error("Stock price element not found");
+}
+  const stockPrice = await stockPriceElement.textContent();
+  if (stockPrice === null) { // 追加
+    throw new Error("Stock price text not found");
+}
 
-    console.log(`The price of ${stockSymbol} is: $${stockPrice}`);
-
-    await browser.close();
-
-    return Number(stockPrice);
+  // 株価を数値として返す
+  return Number(stockPrice.trim().replace(/,/g, ''));
 }

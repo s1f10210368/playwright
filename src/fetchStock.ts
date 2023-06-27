@@ -7,16 +7,17 @@ export async function fetchStock(stockSymbol: string): Promise<number> { // Prom
 
   await page.goto(url);
 
-  const stockHeaderInfo = await page.waitForSelector('[data-test="quote-header-info"]', {timeout: 30000}); // タイムアウトを追加
-  const stockPriceElement = await stockHeaderInfo.$('span[data-reactid]');
-  if (stockPriceElement === null) { // 追加
-  throw new Error("Stock price element not found");
-}
+  const stockHeaderInfo = await page.waitForSelector('[data-test="quote-header-info"]');
+  const stockPriceElement = await stockHeaderInfo.$('h1+div>span:first-child'); // セレクタを修正
+  if (stockPriceElement === null) { 
+    throw new Error("Stock price element not found");
+  }
   const stockPrice = await stockPriceElement.textContent();
-  if (stockPrice === null) { // 追加
+  if (stockPrice === null) {
     throw new Error("Stock price text not found");
-}
+  }
 
-  // 株価を数値として返す
+  await browser.close();
+
   return Number(stockPrice.trim().replace(/,/g, ''));
 }
